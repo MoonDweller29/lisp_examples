@@ -26,6 +26,13 @@
     )
 )
 
+(defun print_all_expressions(expr_list)
+    (cond
+        ((null expr_list)                      ())
+        (T                                     (append (print (car expr_list) (print_all_expressions (cdr expr_list)))))
+    )
+)
+
 (defun check_result(value expression)
     (eq value (eval expression))
 )
@@ -47,3 +54,6 @@
 #|(print (check_result 5 (gen_list5)))
 (print (find_expression 6 (list (gen_list5) (gen_list6))))|#
 (all_tests 0 5)
+(print (append `(+) (list `(+ 1 2) `2)))
+(print "print_all_expressions")
+(print_all_expressions (gen_all_expressions 5))
