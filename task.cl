@@ -68,3 +68,4 @@ which start from left_sub_tree and have n_count extra operands
 (print (gen_all_expressions `2 3))
 (print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 (print (list `(1 2)))
+#|(print `(+ - * / expt)) all operations |#
