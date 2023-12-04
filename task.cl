@@ -1,6 +1,7 @@
 ;gnu clisp  2.49.60
 
 
+
 (defun gen_list5()
     (append `(+) (list `(+ 1 2) `2))
 )
@@ -9,8 +10,12 @@
     (append `(+) (list `(+ 1 2) `3))
 )
 
+(defun gen_all_expressions(value)
+    (list (gen_list5))
+)
+
 (defun gen_expression(value)
-    (gen_list5)
+    (find_expression value (gen_all_expressions value))
 )
 
 (defun find_expression(value expr_list)
