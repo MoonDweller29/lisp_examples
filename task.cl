@@ -10,12 +10,20 @@
     (append `(+) (list `(+ 1 2) `3))
 )
 
-(defun gen_all_expressions(value)
-    (list (gen_list5))
+#|
+returns list of all possible arithmetic expressions
+which start from left_sub_tree and have n_count extra operands
+|#
+(defun gen_all_expressions(left_sub_tree n_count)
+    (cond
+        ((null left_sub_tree) (gen_all_expressions `2 (- n_count 1)))
+        ((eq n_count 0)       (list left_sub_tree))
+        (T                    (gen_all_expressions (append `(+) (list left_sub_tree `3)) (- n_count 1)))
+    )
 )
 
 (defun gen_expression(value)
-    (find_expression value (gen_all_expressions value))
+    (find_expression value (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 )
 
 (defun find_expression(value expr_list)
@@ -54,6 +62,9 @@
 #|(print (check_result 5 (gen_list5)))
 (print (find_expression 6 (list (gen_list5) (gen_list6))))|#
 (all_tests 0 5)
-(print (append `(+) (list `(+ 1 2) `2)))
+#|(print (append `(+) (list `(+ 1 2) `2)))|#
 (print "print_all_expressions")
-(print_all_expressions (gen_all_expressions 5))
+(print_all_expressions (gen_all_expressions () 2))
+(print (gen_all_expressions `2 3))
+(print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
+(print (list `(1 2)))
