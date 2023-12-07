@@ -1,13 +1,11 @@
 ;gnu clisp  2.49.60
 
-
-
 (defun gen_list5()
     (append `(+) (list `(+ 1 2) `2))
 )
 
 (defun gen_list12()
-    (append `(+) (list `(expt 2 3) `4))
+    (list `+ `(expt 2 3) `4)
 )
 
 #|
@@ -18,7 +16,7 @@ which start from left_sub_tree and have n_count extra operands
     (cond
         ((null left_sub_tree) (gen_all_expressions `2 (- n_count 1)))
         ((eq n_count 0)       (list left_sub_tree))
-        (T                    (gen_all_expressions (append `(+) (list left_sub_tree `3)) (- n_count 1)))
+        (T                    (gen_all_expressions (list `+ left_sub_tree `3) (- n_count 1)))
     )
 )
 
