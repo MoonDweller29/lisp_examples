@@ -9,13 +9,7 @@
 )
 
 (defun make_all_possible_nodes(left_child right_child)
-    (list
-        (list `+ left_child right_child)
-        (list `- left_child right_child)
-        (list `* left_child right_child)
-        (list `/ left_child right_child)
-        (list `expt left_child right_child)
-    )
+    (mapcar #'(lambda(op) (list op left_child right_child)) `(+ - * / expt))
 )
 
 #|
