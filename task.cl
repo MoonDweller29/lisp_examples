@@ -20,7 +20,7 @@ which start from left_sub_tree and have n_count extra operands
     (cond
         ((null left_sub_tree) (gen_all_expressions `2 (- n_count 1)))
         ((eq n_count 0)       (list left_sub_tree))
-        (T                    (gen_all_expressions (list `+ left_sub_tree `3) (- n_count 1)))
+        (T                    (mapcar #'(lambda(new_left_child) (car (gen_all_expressions new_left_child (- n_count 1)))) (make_all_possible_nodes left_sub_tree `2)))
     )
 )
 
@@ -39,7 +39,7 @@ which start from left_sub_tree and have n_count extra operands
 (defun print_all_expressions(expr_list)
     (cond
         ((null expr_list)                      ())
-        (T                                     (append (print (car expr_list) (print_all_expressions (cdr expr_list)))))
+        (T                                     (append (print (car expr_list)) (print_all_expressions (cdr expr_list))))
     )
 )
 
@@ -82,11 +82,11 @@ which start from left_sub_tree and have n_count extra operands
 
 #|(print (check_result 5 (gen_list5)))
 (print (find_expression 6 (list (gen_list5) (gen_list12))))|#
-(all_tests 0 5)
+(all_tests 0 26)
 #|(print (append `(+) (list `(+ 1 2) `2)))|#
 (print "print_all_expressions")
-(print_all_expressions (gen_all_expressions () 2))
-(print (gen_all_expressions `2 3))
+(print_all_expressions (gen_all_expressions `2 1))
+(print "====================")
 (print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 (print (list `(1 2)))
 (print (print_infix_notation `(+ 1 2)))
