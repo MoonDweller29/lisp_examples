@@ -6,8 +6,8 @@
     (append `(+) (list `(+ 1 2) `2))
 )
 
-(defun gen_list6()
-    (append `(+) (list `(+ 1 2) `3))
+(defun gen_list12()
+    (append `(+) (list `(expt 2 3) `4))
 )
 
 #|
@@ -45,10 +45,29 @@ which start from left_sub_tree and have n_count extra operands
     (eq value (eval expression))
 )
 
+(defun op_to_string(op)
+    (cond
+        ((eq op `expt) "**")
+        (T             (write-to-string op))
+    )
+)
+
+(defun print_infix_notation(expression)
+    (cond
+        ((null expression) "NULL EXPRESSION")
+        ((atom expression) (write-to-string expression))
+        (T                 (concatenate 'string
+                                        "(" (print_infix_notation (nth 1 expression)) ")"
+                                        (op_to_string (car expression))
+                                        "(" (print_infix_notation (nth 2 expression)) ")"
+                                        ))
+    )
+)
+
 (defun test(value)
     (cond
-        ((check_result value (gen_expression value)) (format T "PASSED: ~d == ~S ~%" value (gen_expression value)))
-        (T                                           (format T "FAILED: ~d != ~S ~%" value (gen_expression value)))
+        ((check_result value (gen_expression value)) (format T "PASSED: ~d == ~S | infix_notation: ~S ~%" value (gen_expression value) (print_infix_notation (gen_expression value))))
+        (T                                           (format T "FAILED: ~d != ~S | infix_notation: ~S ~%" value (gen_expression value) (print_infix_notation (gen_expression value))))
     )
 )
 
@@ -60,7 +79,7 @@ which start from left_sub_tree and have n_count extra operands
 )
 
 #|(print (check_result 5 (gen_list5)))
-(print (find_expression 6 (list (gen_list5) (gen_list6))))|#
+(print (find_expression 6 (list (gen_list5) (gen_list12))))|#
 (all_tests 0 5)
 #|(print (append `(+) (list `(+ 1 2) `2)))|#
 (print "print_all_expressions")
@@ -68,4 +87,7 @@ which start from left_sub_tree and have n_count extra operands
 (print (gen_all_expressions `2 3))
 (print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 (print (list `(1 2)))
+(print (print_infix_notation `(+ 1 2)))
+(print (print_infix_notation (gen_list12)))
+(print (eval (gen_list12)))
 #|(print `(+ - * / expt)) all operations |#
