@@ -8,6 +8,16 @@
     (list `+ `(expt 2 3) `4)
 )
 
+(defun make_all_possible_nodes(left_child right_child)
+    (list
+        (list `+ left_child right_child)
+        (list `- left_child right_child)
+        (list `* left_child right_child)
+        (list `/ left_child right_child)
+        (list `expt left_child right_child)
+    )
+)
+
 #|
 returns list of all possible arithmetic expressions
 which start from left_sub_tree and have n_count extra operands
