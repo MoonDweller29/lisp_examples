@@ -76,8 +76,8 @@ which start from left_sub_tree and have n_count extra operands
 
 (defun test(value)
     (cond
-        ((check_result value (gen_expression value)) (format T "PASSED: ~d == ~S | infix_notation: ~S ~%" value (gen_expression value) (print_infix_notation (gen_expression value))))
-        (T                                           (format T "FAILED: ~d != ~S | infix_notation: ~S ~%" value (gen_expression value) (print_infix_notation (gen_expression value))))
+        ((check_result value (gen_expression value)) (format T "PASSED: ~2d == ~30S | infix_notation: ~A ~%" value (gen_expression value) (print_infix_notation (gen_expression value))))
+        (T                                           (format T "FAILED: ~2d != ~30S | infix_notation: ~A ~%" value (gen_expression value) (print_infix_notation (gen_expression value))))
     )
 )
 
