@@ -12,6 +12,14 @@
     (mapcar #'(lambda(op) (list op left_child right_child)) `(+ - * / expt))
 )
 
+(defun mapcar_concat(F L)
+    (cond
+        ((null L) NIL)
+        (T        (append (funcall F (car L)) (mapcar_concat F (cdr L))))
+    )
+)
+
+
 #|
 returns list of all possible arithmetic expressions
 which start from left_sub_tree and have n_count extra operands
@@ -20,7 +28,7 @@ which start from left_sub_tree and have n_count extra operands
     (cond
         ((null left_sub_tree) (gen_all_expressions `2 (- n_count 1)))
         ((eq n_count 0)       (list left_sub_tree))
-        (T                    (mapcar #'(lambda(new_left_child) (car (gen_all_expressions new_left_child (- n_count 1)))) (make_all_possible_nodes left_sub_tree `2)))
+        (T                    (mapcar_concat #'(lambda(new_left_child) (gen_all_expressions new_left_child (- n_count 1))) (make_all_possible_nodes left_sub_tree `2)))
     )
 )
 
@@ -86,10 +94,10 @@ which start from left_sub_tree and have n_count extra operands
 #|(print (append `(+) (list `(+ 1 2) `2)))|#
 (print "print_all_expressions")
 (print_all_expressions (gen_all_expressions `2 1))
-(print "====================")
+#|(print "====================")
 (print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 (print (list `(1 2)))
 (print (print_infix_notation `(+ 1 2)))
 (print (print_infix_notation (gen_list12)))
-(print (eval (gen_list12)))
+(print (eval (gen_list12)))|#
 #|(print `(+ - * / expt)) all operations |#
