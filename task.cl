@@ -1,13 +1,5 @@
 ;gnu clisp  2.49.60
 
-(defun gen_list5()
-    (append `(+) (list `(+ 1 2) `2))
-)
-
-(defun gen_list12()
-    (list `+ `(expt 2 3) `4)
-)
-
 (defun make_node_safe(op left_child right_child)
     (cond
         ((or (eq op `+)
@@ -124,16 +116,4 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
-#|(print (check_result 5 (gen_list5)))
-(print (find_expression 6 (list (gen_list5) (gen_list12))))|#
 (all_tests 0 26)
-#|(print (append `(+) (list `(+ 1 2) `2)))|#
-(print "print_all_expressions")
-#|(print_all_expressions (gen_all_expressions `2 2))|#
-#|(print "====================")
-(print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
-(print (list `(1 2)))
-(print (print_infix_notation `(+ 1 2)))
-(print (print_infix_notation (gen_list12)))
-(print (eval (gen_list12)))|#
-#|(print `(+ - * / expt)) all operations |#
