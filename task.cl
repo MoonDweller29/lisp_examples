@@ -8,12 +8,24 @@
     (list `+ `(expt 2 3) `4)
 )
 
+(defun make_node_safe(op left_child right_child)
+    (cond
+        ((or (eq op `+)
+             (eq op `-)
+             (eq op `*)
+             (eq op `expt)
+             (and (eq op `/)
+                  (/= 0 (eval right_child)))) (list op left_child right_child))
+        (T                                    ())
+         
+    )
+)
 
 (defun make_all_possible_nodes(left_child right_child_list)
     (cond
         ((null right_child_list) ())
         (T                       (append
-                                     (mapcar #'(lambda(op) (list op left_child (car right_child_list))) `(+ - * / expt))
+                                     (mapcar #'(lambda(op) (make_node_safe op left_child (car right_child_list))) `(+ - * / expt))
                                      (make_all_possible_nodes left_child (cdr right_child_list))
                                  ))
     )
@@ -114,8 +126,7 @@ which start from left_sub_tree and have n_count extra operands
 (all_tests 0 26)
 #|(print (append `(+) (list `(+ 1 2) `2)))|#
 (print "print_all_expressions")
-(print (gen_all_expressions `2 1))
-#|(print_all_expressions (gen_all_expressions `2 1))|#
+#|(print_all_expressions (gen_all_expressions `2 2))|#
 #|(print "====================")
 (print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 (print (list `(1 2)))
