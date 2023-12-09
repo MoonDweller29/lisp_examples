@@ -13,11 +13,14 @@
         ((or (eq op `+)
              (eq op `-)
              (eq op `*)
-             (eq op `expt)
              (and (eq op `/)
-                  (/= 0 (eval right_child)))) (list op left_child right_child))
-        (T                                    ())
-         
+                  (/= 0 (eval right_child))
+             )
+             (and (eq op `expt)
+                  (not (and (= 0 (eval left_child)) (< (eval right_child) 0)))
+             )
+             ) (list op left_child right_child))
+        (T     ())
     )
 )
 
