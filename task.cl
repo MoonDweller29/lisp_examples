@@ -27,12 +27,15 @@
 )
 
 
-(defun gen_all_expressions(left_sub_tree n_count right_n_count)
+(defun gen_all_expressions_internal(left_sub_tree n_count right_n_count)
     (cond
         ((> right_n_count n_count) ())
         (T                         (append
-                                       ()
-                                       (gen_all_expressions left_sub_tree n_count (+ right_n_count 1))
+                                       (mapcar_concat
+                                           #'(lambda(new_left_child) (gen_all_expressions new_left_child (- n_count right_n_count)))
+                                           (make_all_possible_nodes left_sub_tree (gen_all_expressions `2 (- right_n_count 1)))
+                                       )
+                                       (gen_all_expressions_internal left_sub_tree n_count (+ right_n_count 1))
                                    ))
     )
 )
@@ -46,7 +49,7 @@ which start from left_sub_tree and have n_count extra operands
         ((null left_sub_tree) (gen_all_expressions `2 (- n_count 1)))
         ((eq n_count 0)       (list left_sub_tree))
         ((< n_count 0)        ())
-        (T                    (mapcar_concat #'(lambda(new_left_child) (gen_all_expressions new_left_child (- n_count 1))) (make_all_possible_nodes left_sub_tree `(2))))
+        (T                    (gen_all_expressions_internal left_sub_tree n_count 1))
     )
 )
 
@@ -111,7 +114,8 @@ which start from left_sub_tree and have n_count extra operands
 (all_tests 0 26)
 #|(print (append `(+) (list `(+ 1 2) `2)))|#
 (print "print_all_expressions")
-(print_all_expressions (gen_all_expressions `2 1))
+(print (gen_all_expressions `2 1))
+#|(print_all_expressions (gen_all_expressions `2 1))|#
 #|(print "====================")
 (print (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 (print (list `(1 2)))
