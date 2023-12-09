@@ -8,8 +8,15 @@
     (list `+ `(expt 2 3) `4)
 )
 
-(defun make_all_possible_nodes(left_child right_child)
-    (mapcar #'(lambda(op) (list op left_child right_child)) `(+ - * / expt))
+
+(defun make_all_possible_nodes(left_child right_child_list)
+    (cond
+        ((null right_child_list) ())
+        (T                       (append
+                                     (mapcar #'(lambda(op) (list op left_child (car right_child_list))) `(+ - * / expt))
+                                     (make_all_possible_nodes left_child (cdr right_child_list))
+                                 ))
+    )
 )
 
 (defun mapcar_concat(F L)
@@ -20,6 +27,16 @@
 )
 
 
+(defun gen_all_expressions(left_sub_tree n_count right_n_count)
+    (cond
+        ((> right_n_count n_count) ())
+        (T                         (append
+                                       ()
+                                       (gen_all_expressions left_sub_tree n_count (+ right_n_count 1))
+                                   ))
+    )
+)
+
 #|
 returns list of all possible arithmetic expressions
 which start from left_sub_tree and have n_count extra operands
@@ -28,7 +45,8 @@ which start from left_sub_tree and have n_count extra operands
     (cond
         ((null left_sub_tree) (gen_all_expressions `2 (- n_count 1)))
         ((eq n_count 0)       (list left_sub_tree))
-        (T                    (mapcar_concat #'(lambda(new_left_child) (gen_all_expressions new_left_child (- n_count 1))) (make_all_possible_nodes left_sub_tree `2)))
+        ((< n_count 0)        ())
+        (T                    (mapcar_concat #'(lambda(new_left_child) (gen_all_expressions new_left_child (- n_count 1))) (make_all_possible_nodes left_sub_tree `(2))))
     )
 )
 
