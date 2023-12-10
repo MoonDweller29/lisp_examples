@@ -14,6 +14,22 @@
     )
 )
 
+(defun has_duplicate(exp_list value)
+    (cond
+        ((null exp_list) nil)
+        (T               (or  (eq value (eval (car exp_list))) (has_duplicate (cdr exp_list) value)))
+    )
+)
+
+(defun remove_nulls_and_duplicates(exp_list)
+    (cond
+        ((null exp_list)                                ())
+        ((null (car exp_list))                          (cdr exp_list))
+        ((has_duplicate (cdr exp_list) (eval (car exp_list))) (cdr exp_list))
+        (T                                              (append (list (car exp_list)) (remove_nulls_and_duplicates (cdr exp_list))))
+    )
+)
+
 (defun make_all_possible_nodes(left_child right_child_list)
     (cond
         ((null right_child_list) ())
