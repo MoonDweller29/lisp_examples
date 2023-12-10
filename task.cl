@@ -137,4 +137,4 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
-(all_tests 0 26)
+(all_tests 1 26)
