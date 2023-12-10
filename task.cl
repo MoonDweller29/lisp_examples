@@ -28,6 +28,8 @@
     )
 )
 
+; как mapcar, но конкатенирует результаты вызова функционала в один список
+; (вместо того, чтобы создавать список списков)
 (defun mapcar_concat(F L)
     (cond
         ((null L) NIL)
@@ -36,6 +38,14 @@
 )
 
 
+#|
+Используется для взаимной рекурсии с основной функцией gen_all_expressions
+Содержит накапливающий параметр right_n_count -- количество двоек, которое можно использовать для генерации правого поддерева.
+На каждом шаге генерирует все возможные правые поддеревья размера right_n_count, после чего объединяет их с left_sub_tree, получая new_left_child.
+Для каждого new_left_child запускает дальнейшую генерацию выражений gen_all_expressions с новым левым поддеревом.
+И ко всему этому добавляет свой же рекурсивный вызов с увеличенным накапливающим параметром right_n_count,
+за счёт чего перебирает все возможные варианты размеров правых поддеревьев.
+|#
 (defun gen_all_expressions_internal(left_sub_tree n_count right_n_count)
     (cond
         ((> right_n_count n_count) ())
@@ -50,8 +60,10 @@
 )
 
 #|
-returns list of all possible arithmetic expressions
-which start from left_sub_tree and have n_count extra operands
+генерирует список всех возможных арифметических выражений, каждое из которых:
+* задано в виде вычислимого списка (АСД)
+* начинается с левого поддерева left_sub_tree
+* нехватает n_count двоек, которыми необходимо дополнить left_sub_tree до построенного выражения
 |#
 (defun gen_all_expressions(left_sub_tree n_count)
     (cond
@@ -62,10 +74,12 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; генерирует арифметическое выражение в виде вычислимого списка, равное заданному значению value
 (defun gen_expression(value)
     (find_expression value (append (gen_all_expressions `2 4) (gen_all_expressions `22 3)))
 )
 
+; в списке expr_list ищет выражение, равное value
 (defun find_expression(value expr_list)
     (cond
         ((null expr_list)                      ())
@@ -74,6 +88,8 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; debug only
+; печатает список всех сгенерированных выражений
 (defun print_all_expressions(expr_list)
     (cond
         ((null expr_list)                      ())
@@ -81,10 +97,14 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; проверяет, что ариметическое выражение expression равно value
 (defun check_result(value expression)
     (eq value (eval expression))
 )
 
+; операция умножения в степень записана в нотации, интерпретируемой питоном
+; т.е. "**" вместо "^"
+; так просто удобнее, чтобы проверить, что распечатанные выражения в инфиксной записи корректны
 (defun op_to_string(op)
     (cond
         ((eq op `expt) "**")
@@ -92,6 +112,7 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; функция, опускающие скобки в тривиальных случаях
 (defun print_left_op(left_op op)
     (cond
         ((or (atom left_op)
@@ -102,6 +123,7 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; функция, опускающие скобки в тривиальных случаях
 (defun print_right_op(right_op op)
     (cond
         ((or (atom right_op)
@@ -111,6 +133,7 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; функция печати, переводящая выражение из польской записи в инфиксную
 (defun print_infix_notation(expression)
     (cond
         ((null expression) "NULL EXPRESSION")
@@ -123,6 +146,7 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; генерирует выражение для заданного значения value, проверяет его и печатает результат
 (defun test(value)
     (cond
         ((check_result value (gen_expression value)) (format T "PASSED: ~2d == ~30S | infix_notation: ~A ~%" value (gen_expression value) (print_infix_notation (gen_expression value))))
@@ -130,6 +154,9 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+; запускает все тесты
+; start_v -- первое значение, для которого нужно сгенерировать выражение
+; max_v -- последнее значение, для которого нужно сгенерировать выражение
 (defun all_tests(start_v max_v)
     (cond
         ((> start_v max_v) ())
