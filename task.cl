@@ -92,14 +92,33 @@ which start from left_sub_tree and have n_count extra operands
     )
 )
 
+(defun print_left_op(left_op op)
+    (cond
+        ((or (atom left_op)
+             (eq `+ op)
+             (eq `- op)
+         )                   (print_infix_notation left_op))
+        (T                   (concatenate 'string "(" (print_infix_notation left_op) ")"))
+    )
+)
+
+(defun print_right_op(right_op op)
+    (cond
+        ((or (atom right_op)
+             (eq `+ op)
+         )                   (print_infix_notation right_op))
+        (T                   (concatenate 'string "(" (print_infix_notation right_op) ")"))
+    )
+)
+
 (defun print_infix_notation(expression)
     (cond
         ((null expression) "NULL EXPRESSION")
         ((atom expression) (write-to-string expression))
         (T                 (concatenate 'string
-                                        "(" (print_infix_notation (nth 1 expression)) ")"
+                                        (print_left_op (nth 1 expression) (car expression))
                                         (op_to_string (car expression))
-                                        "(" (print_infix_notation (nth 2 expression)) ")"
+                                        (print_right_op (nth 2 expression) (car expression))
                                         ))
     )
 )
