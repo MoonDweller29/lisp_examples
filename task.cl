@@ -17,6 +17,10 @@
 (defun make_all_possible_nodes(left_child right_child_list)
     (cond
         ((null right_child_list) ())
+        ((and (eq `2 left_child) (eq `2 (car right_child_list))) (append
+                                                                `((+ 2 2) (- 2 2) (/ 2 2))
+                                                                (make_all_possible_nodes left_child (cdr right_child_list))
+                                                            ))
         (T                       (append
                                      (mapcar #'(lambda(op) (make_node_safe op left_child (car right_child_list))) `(+ - * / expt))
                                      (make_all_possible_nodes left_child (cdr right_child_list))
